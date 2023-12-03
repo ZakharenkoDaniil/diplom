@@ -1,20 +1,22 @@
 package com.mirea.diplom.controller;
 
-import com.mirea.diplom.client.IWebClient;
 import com.mirea.diplom.entity.BaseRequest;
 import com.mirea.diplom.entity.BaseResponse;
+import com.mirea.diplom.service.OutputRequestService;
 import org.springframework.http.HttpMethod;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
-@RestController
-public class RestInputController {
+import static com.mirea.diplom.utils.Constants.URI_HEADER;
 
-    private final Map<String, IWebClient> clientMap;
+@RestController("/output")
+public class OutputRestController {
 
-    public RestInputController(Map<String, IWebClient> clientMap) {
-        this.clientMap = clientMap;
+    private final Map<String, OutputRequestService> requestServiceMap;
+
+    public OutputRestController(Map<String, OutputRequestService> requestServiceMap) {
+        this.requestServiceMap = requestServiceMap;
     }
 
     @PostMapping("/")
@@ -38,25 +40,12 @@ public class RestInputController {
     }
 
     public String handleRequest(Map<String, String> headers, String request, HttpMethod method) {
-        String destinationUri = headers.get("Destination-Uri");
-        IWebClient client = clientMap.get(destinationUri);
+        String destinationUri = headers.get(URI_HEADER);
+        OutputRequestService outputRequestService = requestServiceMap.get(destinationUri);
         BaseRequest baseRequest = new BaseRequest();
         baseRequest.setHeaders(headers);
         baseRequest.setBody(request);
-        BaseResponse response = new BaseResponse();
-        switch (method) {
-            case POST:
-                response = client.post(baseRequest);
-            case GET:
-                response = client.get(baseRequest);
-                break;
-            case PUT:
-                response = client.put(baseRequest);
-                break;
-            case DELETE:
-                response = client.delete(baseRequest);
-                break;
-        }
+        BaseResponse response = outputRequestService.apply(baseRequest, method);
         return response.getBody();
     }
 }

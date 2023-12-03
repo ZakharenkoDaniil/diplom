@@ -13,5 +13,4 @@ import java.util.List;
 @Setter
 public class Properties {
     private List<ClientProperty> clientProperties;
-    private List<OttProperty> ottProperties;
 }

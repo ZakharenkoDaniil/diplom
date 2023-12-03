@@ -1,13 +1,8 @@
 clients:
   - uri: localhost:443/
     certPath: "test"
-    ottClientName: "testOttClient1"
     requestSchemePath: "test/request/path"
     responseSchemePath: "test/response/path"
   - uri: localhost:8080/
     requestSchemePath: "test/request/path"
     responseSchemePath: "test/response/path"
-ott-clients:
-  - ottClientName: "testOttClient1"
-    ottUri: "testOttUri:8080"
-    ottCertPath: "test/ott/cert/path"
